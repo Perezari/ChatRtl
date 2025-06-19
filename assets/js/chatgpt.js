@@ -21,6 +21,28 @@ if (!document.getElementById("RTL")) {
         main.rtl .flex.items-start.pl-1 {
             direction: rtl;
         }
+        /* שדרוג האייקון */
+        #rtlButton > div > div > div > span > div {
+            height: 40px !important;
+            width: 40px !important;
+            background-color: #1d4ed8; /* כחול חזק */
+            color: white !important;
+            box-shadow: 0 0 10px rgba(29, 78, 216, 0.7);
+            border-color: #1e40af !important; /* כחול כהה יותר */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #rtlButton > div > div > div > span > div:hover {
+            background-color: #2563eb; /* כחול מעט יותר בהיר בהובר */
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.9);
+        }
+        /* הגדלת האייקון SVG */
+        #rtlButton svg {
+            height: 24px !important;
+            width: 24px !important;
+        }
     `;
     document.head.appendChild(style);
 }
@@ -33,13 +55,22 @@ if (savedRTL === "true") {
     mainElement.classList.add("rtl");
 }
 
+// הוספת קיצור מקלדת: Ctrl + R
+document.addEventListener("keydown", (e) => {
+    if (e.altKey && e.shiftKey) {
+        e.preventDefault();
+        mainElement.classList.toggle("rtl");
+        const isRTLNow = mainElement.classList.contains("rtl");
+        localStorage.setItem("isRTL", isRTLNow.toString());
+    }
+});
+
+
 const observer = new MutationObserver(() => {
     const textarea = document.querySelector("main form div.bg-primary-surface-primary");
     if (textarea) {
         if (!document.getElementById("rtlButton")) {
-            // הוסף class rtl אם שמור ב-localStorage (כבר עשינו למעלה, אפשר להסיר מפה)
-            // mainElement.classList.add("rtl");
-
+            // הוסף את הכפתור
             const rtlButton = document.createElement("div");
             rtlButton.id = "rtlButton";
             rtlButton.innerHTML = `
@@ -73,7 +104,6 @@ const observer = new MutationObserver(() => {
                 localStorage.setItem("isRTL", isRTLNow.toString());
             });
         }
-        // observer.disconnect();
     }
 });
 
